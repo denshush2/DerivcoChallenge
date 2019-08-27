@@ -1,33 +1,111 @@
-.App {
-  text-align: center;
-}
+@import url("https://fonts.googleapis.com/css?family=Cairo");
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-  pointer-events: none;
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
+@keyframes spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+body {
+  /* background-color: #292929; */
+}
+
+#repeatButton {
+  appearance: none;
+  border: none;
+  background: url(https://andyhoffman.codes/random-assets/img/slots/repeat.png)
+    transparent 0 0 no-repeat;
+  background-size: cover;
+  width: 48px;
+  height: 48px;
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  cursor: pointer;
+  animation: 6s linear infinite spin;
+}
+
+h1 {
+  font-size: 150%;
+  padding: 0.25em 0.5em;
+  font-family: "Cairo", sans-serif;
+}
+
+h1 span {
+  color: aliceblue;
+  border: 1px solid hsla(208, 100%, 97.1%, 0.2);
+  padding: 0.1em 0.2em;
+}
+
+.icons {
+  display: inline-block;
+  width: 141px;
+  height: 434px;
+  overflow: hidden;
+  background: #fff url(./assets/img/reels.png) repeat-y;
+  will-change: backgroundPosition;
+  transition: 0.3s background-position ease-in-out;
+  padding: 0 80px;
+  transform: translateZ(0);
+}
+
+.icons:nth-child(2) {
+  margin: 0 10px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.app-wrap.winner-false {
+  animation: linear 1s spin;
+}
+
+.spinner-container::after {
+  position: absolute;
+  content: "";
+  display: block;
+  height: 10px;
+  top: 20%;
+  transform: translateY(-50%);
+  right: 30px;
+  left: 30px;
+  /* background: rgba(255, 0, 0, 0.5); */
+}
+
+.gradient-fade {
+  position: absolute;
+  top: 32px;
+  right: 32px;
+  bottom: 32px;
+  left: 32px;
+  background: linear-gradient(
+    to bottom,
+    rgba(64, 64, 64, 1) 0%,
+    rgba(64, 64, 64, 0) 7%,
+    rgba(64, 64, 64, 0) 93%,
+    rgba(64, 64, 64, 1) 100%
+  );
+}
+/* .testImage {
+  border: 1px solid black;
+  position: absolute;
+  top: 0;
+  left: 32;
+  z-index: 110;
+  width: 500px;
+  height: 500px;
+  background: "./assets/img/testLine.png";
+} */
+
+@media screen and (max-width: 1000px) {
+  .spinner-container {
+    transform: translate(-50%, -50%) scale(0.55, 0.55);
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .spinner-container {
+    transform: translate(-50%, -50%) scale(0.4, 0.4);
   }
 }

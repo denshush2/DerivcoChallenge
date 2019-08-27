@@ -1,0 +1,125 @@
+.spinner-container {
+  overflow: hidden;
+  height: 500px;
+  padding: 2em;
+  transform: translate(-50%, -50%) scale(0.62, 0.62);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  transition: 0.3s transform;
+}
+
+.line {
+  &-reelOne {
+    &-top {
+      position: absolute;
+      content: "";
+      display: block;
+      //   height: 10px;
+      //   top: 20%;
+      //   transform: translateY(-50%);
+      //   right: 30px;
+      //   left: 30px;
+      //   background: rgba(255, 0, 0, 0.5);
+    }
+  }
+}
+.redLine {
+  &-reelOne {
+    &-top {
+      position: absolute;
+      z-index: 100;
+      background-color: red;
+      margin: auto;
+      width: 20%;
+      height: 10px;
+      top: 100px;
+      left: 60px;
+    }
+    &-center {
+      position: absolute;
+      z-index: 100;
+      background-color: red;
+      margin: auto;
+      width: 20%;
+      height: 10px;
+      top: 240px;
+      left: 60px;
+    }
+    &-bottom {
+      position: absolute;
+      z-index: 100;
+      background-color: red;
+      margin: auto;
+      width: 20%;
+      height: 10px;
+      top: 380px;
+      left: 60px;
+    }
+  }
+  &-reelTwo {
+    &-top {
+      position: absolute;
+      z-index: 100;
+      background-color: red;
+      margin: auto;
+      width: 20%;
+      height: 10px;
+      top: 100px;
+      left: 230px;
+    }
+    &-center {
+      position: absolute;
+      z-index: 100;
+      background-color: red;
+      margin: auto;
+      width: 20%;
+      height: 10px;
+      top: 240px;
+      left: 230px;
+    }
+    &-bottom {
+      position: absolute;
+      z-index: 100;
+      background-color: red;
+      margin: auto;
+      width: 20%;
+      height: 10px;
+      top: 380px;
+      left: 230px;
+    }
+  }
+  &-reelThree {
+    &-top {
+      position: absolute;
+      z-index: 100;
+      background-color: red;
+      margin: auto;
+      width: 20%;
+      height: 10px;
+      top: 100px;
+      left: 380px;
+    }
+    &-center {
+      position: absolute;
+      z-index: 100;
+      background-color: red;
+      margin: auto;
+      width: 20%;
+      height: 10px;
+      top: 240px;
+      left: 380px;
+    }
+    &-bottom {
+      position: absolute;
+      z-index: 100;
+      background-color: red;
+      margin: auto;
+      width: 20%;
+      height: 10px;
+      top: 380px;
+      left: 380px;
+    }
+  }
+}
