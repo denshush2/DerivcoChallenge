@@ -1,3 +1,10 @@
+/**
+ * Function for get three symbols
+ * @param {Array}reels
+ * @param {String/ArrayOFStrings} symbol
+ * @returns {Array}
+ *  */
+
 function getThreeSymbols(reels, symbol) {
   if (typeof symbol === "string") {
     let count = 0;
@@ -7,13 +14,11 @@ function getThreeSymbols(reels, symbol) {
       }
       return false;
     });
-    console.log("Result", symbol, count);
     if (count[0][0] && count[1][0] && count[2][0]) {
       return [true, [count[0][1], count[1][1], count[2][1]]];
     }
     return false;
   } else {
-    console.log("combination", symbol);
     let count = 0;
     count = reels.map(item => {
       if (item.includes(symbol[0])) {
@@ -34,6 +39,11 @@ function getThreeSymbols(reels, symbol) {
   }
 }
 
+/**
+ *
+ * @param {Array} reels
+ * @returns {Object} {msg, value, redLines}
+ */
 export function checkResult(reels) {
   // 3 CHERRY symbols on top line 2000
   if (reels.length === 3) {
@@ -44,7 +54,7 @@ export function checkResult(reels) {
       reels[0][0] === "cherry"
     ) {
       return {
-        msg: "3 CHERRY symbols on top line",
+        msg: "3 CHERRY symbols on top line, won 2000",
         value: 2000,
         redlines: [1, 1, 1]
       };
@@ -56,7 +66,7 @@ export function checkResult(reels) {
       reels[0][1] === "cherry"
     ) {
       return {
-        msg: "3 CHERRY symbols on center line",
+        msg: "3 CHERRY symbols on center line, won 1000",
         value: 1000,
         redlines: [2, 2, 2]
       };
@@ -68,7 +78,7 @@ export function checkResult(reels) {
       reels[0][2] === "cherry"
     ) {
       return {
-        msg: "3 CHERRY symbols on bottom line",
+        msg: "3 CHERRY symbols on bottom line, won 4000",
         value: 4000,
         redlines: [3, 3, 3]
       };
@@ -77,7 +87,7 @@ export function checkResult(reels) {
     let seven = getThreeSymbols(reels, "seven");
     if (seven[0]) {
       return {
-        msg: "3 7 symbols on any line",
+        msg: "3 7 symbols on any line, won 150",
         value: 150,
         redlines: seven[1]
       };
@@ -95,7 +105,7 @@ export function checkResult(reels) {
     let trippleBar = getThreeSymbols(reels, "trippleBar");
     if (trippleBar[0]) {
       return {
-        msg: "3 3xBAR symbols on any line",
+        msg: "3 3xBAR symbols on any line, won 150",
         value: 150,
         redlines: trippleBar[1]
       };
@@ -104,7 +114,7 @@ export function checkResult(reels) {
     let doubleBar = getThreeSymbols(reels, "dobleBar");
     if (doubleBar[0]) {
       return {
-        msg: "3 2xBAR symbols on any line",
+        msg: "3 2xBAR symbols on any line, won 20",
         value: 20,
         redlines: doubleBar[1]
       };
@@ -113,7 +123,7 @@ export function checkResult(reels) {
     //3 BAR symbols on any line 10
     if (bar[0]) {
       return {
-        msg: "3 BAR symbols on any line",
+        msg: "3 BAR symbols on any line, won 10",
         value: 10,
         redlines: bar[1]
       };

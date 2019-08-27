@@ -3,7 +3,6 @@ import classNames from "classnames";
 import constants from "./sloMachieConsts";
 import { checkResult } from "./functions";
 import RepeatButton from "../../components/RepeatButton";
-import WinningSound from "../../components/WinningSound";
 import Spinner from "../../components/Spinner";
 
 class SlotMachine extends Component {
@@ -13,6 +12,7 @@ class SlotMachine extends Component {
     winner: {},
     reelsOn: true,
     gameStart: false,
+    playerCanEditBalance: false,
     player: {
       name: "Random Name",
       balance: 1000
@@ -35,6 +35,10 @@ class SlotMachine extends Component {
     redlines: classNames("redLine-reelOne-top"),
     firstSpin: true
   };
+  /**
+   * Handle Click
+   * @description just update and reset the reels
+   */
   handleClick = () => {
     this.setState(state => ({
       ...state,
@@ -63,6 +67,11 @@ class SlotMachine extends Component {
       return 0;
     }
   };
+  /**
+   * FindPosition
+   * @description Find the position of icons
+   * @param {number} position
+   */
   findPosition = position => {
     const currentPos = Math.abs(position % this.state.totalHeight);
     const result =
@@ -80,7 +89,12 @@ class SlotMachine extends Component {
       reels: [...state.reels, reel]
     }));
   };
-  setupDebugMode = () => {};
+  /**
+   * Finish Handler
+   * @description Finish the reels and find the result
+   * @param {number} value
+   * @param {number} timer
+   */
   finishHandler = async (value, timer) => {
     try {
       this.findPosition(value);
@@ -112,16 +126,48 @@ class SlotMachine extends Component {
       reelsOn,
       staticIcons,
       gameStart,
-      debugMode
+      debugMode,
+      playerCanEditBalance
     } = this.state;
     return (
       <div>
         <div>
           <h2>
-            {player.name} -> Balance: {player.balance}
+            {player.name} -> Balance:
+            <input
+              type="number"
+              value={player.balance}
+              min="1"
+              max="5000"
+              onChange={event => {
+                let value = event.target.value;
+                if (value > 0 && value < 5000) {
+                  console.log(event.target.value);
+                  this.setState(state => ({
+                    ...state,
+                    player: {
+                      ...state.player,
+                      balance: value
+                    }
+                  }));
+                }
+              }}
+              readOnly={!playerCanEditBalance}
+            />
+            <button
+              onClick={() => {
+                this.setState({ playerCanEditBalance: !playerCanEditBalance });
+              }}
+            >
+              {!playerCanEditBalance ? "Change" : "Save"}
+            </button>
           </h2>
           <h3>{winner.msg !== undefined ? `${winner.msg}` : <span></span>}</h3>
-          {reelsOn ? <div></div> : <RepeatButton onClick={this.handleClick} />}
+          {reelsOn && player.balance > 0 ? (
+            <div></div>
+          ) : (
+            <RepeatButton onClick={this.handleClick} />
+          )}
           {!gameStart ? (
             <button onClick={() => this.setState({ gameStart: true })}>
               <b>Start Game</b>
@@ -132,43 +178,22 @@ class SlotMachine extends Component {
         </div>
         {gameStart ? (
           <div className="spinner-container line-reelOne-top">
-            {/* <span className={"testImage"}></span> */}
             {Object.keys(constants.timer).map((item, index) => (
-              <>
-                {/* {!reelsOn && winner.redlines && (
-                  <span
-                    className={
-                      (winner.redlines[index] === 1 &&
-                        index === 0 &&
-                        "redLine-reelOne-top ") +
-                      (winner.redlines[index] === 2 &&
-                        index === 0 &&
-                        "redLine-reelOne-center ") +
-                      (winner.redlines[index] === 3 &&
-                        index === 0 &&
-                        "redLine-reelOne-bottom") +
-                      (winner.redlines[index] === 1 &&
-                        index === 1 &&
-                        "redLine-reelTwo-top")
-                    }
-                  ></span>
-                )} */}
-                <Spinner
-                  key={index}
-                  onFinish={this.finishHandler}
-                  setupValue={staticIcons[index]}
-                  debugMode={debugMode}
-                  reelsOn={reelsOn}
-                  reel={index}
-                  redline={
-                    winner.msg !== undefined ? winner.redlines[index] : null
-                  }
-                  ref={child => {
-                    this["_child" + index] = child;
-                  }}
-                  timer={constants.timer[item]}
-                />
-              </>
+              <Spinner
+                key={index}
+                onFinish={this.finishHandler}
+                setupValue={staticIcons[index]}
+                debugMode={debugMode}
+                reelsOn={reelsOn}
+                reel={index}
+                redline={
+                  winner.msg !== undefined ? winner.redlines[index] : null
+                }
+                ref={child => {
+                  this["_child" + index] = child;
+                }}
+                timer={constants.timer[item]}
+              />
             ))}
             <div className="gradient-fade" />
           </div>
