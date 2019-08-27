@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import classNames from "classnames";
+import { Input, Button, Container, FormGroup, Label, Row, Col, InputGroup, Nav, NavItem, InputGroupAddon, Navbar, NavbarBrand, NavbarToggler, Collapse } from 'reactstrap'
 import constants from "./sloMachieConsts";
 import { checkResult } from "./functions";
 import RepeatButton from "../../components/RepeatButton";
@@ -32,8 +32,8 @@ class SlotMachine extends Component {
         icon: 0
       }
     ],
-    redlines: classNames("redLine-reelOne-top"),
-    firstSpin: true
+    firstSpin: true,
+    navBarOpen: true
   };
   /**
    * Handle Click
@@ -127,54 +127,69 @@ class SlotMachine extends Component {
       staticIcons,
       gameStart,
       debugMode,
-      playerCanEditBalance
+      playerCanEditBalance,
+      navBarOpen
     } = this.state;
     return (
       <div>
+        <Navbar>
+          <NavbarBrand>Dervico Slot-Machine</NavbarBrand>
+          <NavbarToggler onClick={() => { this.setState((state) => ({ ...state, navBarOpen: !navBarOpen })) }} />
+          <Collapse isOpen={navBarOpen}>
+            <Nav className='ml-auto' navbar>
+              <NavItem>
+                <InputGroup>
+                  <InputGroupAddon addonType="append">
+                    <Input
+                      readOnly={!playerCanEditBalance}
+                      onChange={event => {
+                        let value = event.target.value;
+                        if (value > 0 && value < 5000) {
+                          console.log(event.target.value);
+                          this.setState(state => ({
+                            ...state,
+                            player: {
+                              ...state.player,
+                              balance: value
+                            }
+                          }));
+                        }
+                      }} value={player.balance} type="number" min="1" max="5000" />
+                    <Button onClick={() => {
+                      this.setState({ playerCanEditBalance: !playerCanEditBalance });
+                    }} color={playerCanEditBalance ? "success" : "primary"}>{playerCanEditBalance ? "Save" : "Load"}</Button>
+                  </InputGroupAddon>
+                </InputGroup>
+              </NavItem>
+            </Nav>
+          </Collapse>
+        </Navbar>
+        <Container>
+          <Row>
+            <Col>
+              {!gameStart ? (
+                <Button color="success" onClick={() => this.setState({ gameStart: true })}>Start Game</Button>
+              ) : (
+                  <div>Game Started</div>
+                )}
+            </Col>
+            <Col>
+              {reelsOn && player.balance > 0 ? (
+                <div></div>
+              ) : (
+                  <RepeatButton onClick={this.handleClick} />
+                )}
+            </Col>
+            <Col>
+              {winner.msg !== undefined && (<h3>Winner: {winner.msg}</h3>)}
+            </Col>
+
+          </Row>
+        </Container>
         <div>
-          <h2>
-            {player.name} -> Balance:
-            <input
-              type="number"
-              value={player.balance}
-              min="1"
-              max="5000"
-              onChange={event => {
-                let value = event.target.value;
-                if (value > 0 && value < 5000) {
-                  console.log(event.target.value);
-                  this.setState(state => ({
-                    ...state,
-                    player: {
-                      ...state.player,
-                      balance: value
-                    }
-                  }));
-                }
-              }}
-              readOnly={!playerCanEditBalance}
-            />
-            <button
-              onClick={() => {
-                this.setState({ playerCanEditBalance: !playerCanEditBalance });
-              }}
-            >
-              {!playerCanEditBalance ? "Change" : "Save"}
-            </button>
-          </h2>
-          <h3>{winner.msg !== undefined ? `${winner.msg}` : <span></span>}</h3>
-          {reelsOn && player.balance > 0 ? (
-            <div></div>
-          ) : (
-            <RepeatButton onClick={this.handleClick} />
-          )}
-          {!gameStart ? (
-            <button onClick={() => this.setState({ gameStart: true })}>
-              <b>Start Game</b>
-            </button>
-          ) : (
-            <div>Game Started</div>
-          )}
+          <h3></h3>
+
+
         </div>
         {gameStart ? (
           <div className="spinner-container line-reelOne-top">
@@ -198,130 +213,142 @@ class SlotMachine extends Component {
             <div className="gradient-fade" />
           </div>
         ) : (
-          <div>Press the button Start</div>
-        )}
+            <div>Press the button Start</div>
+          )}
         <div>
           <p>
-            Debug Mode
-            <input
-              type="checkbox"
-              checked={debugMode}
-              onChange={() => {
-                this.setState({ debugMode: !this.state.debugMode });
-              }}
-            />
+            <Button color="primary" onClick={() => {
+              this.setState({ debugMode: !this.state.debugMode });
+            }}>Debug Mode {debugMode ? "ON" : "Off"}</Button>
           </p>
           {debugMode ? (
-            <div>
-              <section>
-                <b>Reel One</b>
-                <select
-                  onChange={event => {
-                    let newStaticIcons = staticIcons.slice();
-                    newStaticIcons[0].position = event.target.value;
-                    this.setState(state => ({
-                      ...state,
-                      staticIcons: newStaticIcons
-                    }));
-                  }}
-                  defaultValue={0}
-                >
-                  <option value={0}>Top</option>
-                  <option value={141}>Center</option>
-                  <option value={282}>Bottom</option>
-                </select>
-                <select
-                  onChange={event => {
-                    let newStaticIcons = staticIcons.slice();
-                    newStaticIcons[0].icon = event.target.value;
-                    this.setState(state => ({
-                      ...state,
-                      staticIcons: newStaticIcons
-                    }));
-                  }}
-                  defaultValue={0}
-                >
-                  <option value={0}>Tripple Bar</option>
-                  <option value={141}>BAR</option>
-                  <option value={282}>Double Bar</option>
-                  <option value={423}>Seven</option>
-                  <option value={564}>Cherry</option>
-                </select>
-              </section>
-              <section>
-                <b>Reel Two</b>
-                <select
-                  onChange={event => {
-                    let newStaticIcons = staticIcons.slice();
-                    newStaticIcons[1].position = event.target.value;
-                    this.setState(state => ({
-                      ...state,
-                      staticIcons: newStaticIcons
-                    }));
-                  }}
-                  defaultValue={0}
-                >
-                  <option value={0}>Top</option>
-                  <option value={141}>Center</option>
-                  <option value={282}>Bottom</option>
-                </select>
-                <select
-                  onChange={event => {
-                    let newStaticIcons = staticIcons.slice();
-                    newStaticIcons[1].icon = event.target.value;
-                    this.setState(state => ({
-                      ...state,
-                      staticIcons: newStaticIcons
-                    }));
-                  }}
-                  defaultValue={0}
-                >
-                  <option value={0}>Tripple Bar</option>
-                  <option value={141}>BAR</option>
-                  <option value={282}>Double Bar</option>
-                  <option value={423}>Seven</option>
-                  <option value={564}>Cherry</option>
-                </select>
-              </section>
-              <section>
-                <b>Reel three</b>
-                <select
-                  onChange={event => {
-                    let newStaticIcons = staticIcons.slice();
-                    newStaticIcons[2].position = event.target.value;
-                    this.setState(state => ({
-                      ...state,
-                      staticIcons: newStaticIcons
-                    }));
-                  }}
-                  defaultValue={0}
-                >
-                  <option value={0}>Top</option>
-                  <option value={141}>Center</option>
-                  <option value={282}>Bottom</option>
-                </select>
-                <select
-                  onChange={event => {
-                    let newStaticIcons = staticIcons.slice();
-                    newStaticIcons[2].icon = event.target.value;
-                    this.setState(state => ({
-                      ...state,
-                      staticIcons: newStaticIcons
-                    }));
-                  }}
-                  defaultValue={0}
-                >
-                  <option value={0}>Tripple Bar</option>
-                  <option value={141}>BAR</option>
-                  <option value={282}>Double Bar</option>
-                  <option value={423}>Seven</option>
-                  <option value={564}>Cherry</option>
-                </select>
-              </section>
-            </div>
+            <Container>
+              <Row>
+                <Col sm="4">
+                  <FormGroup>
+                    <Label for="reelOne"><b>ReelOne</b></Label>
+                    <Input id="reelOne" type='select'
+                      onChange={event => {
+                        let newStaticIcons = staticIcons.slice();
+                        newStaticIcons[0].position = event.target.value;
+                        this.setState(state => ({
+                          ...state,
+                          staticIcons: newStaticIcons
+                        }));
+                      }}
+                      defaultValue={0}>
+                      <option value={0}>Top</option>
+                      <option value={141}>Center</option>
+                      <option value={282}>Bottom</option>
+                    </Input>
+                    <Input
+                      type='select'
+                      onChange={event => {
+                        let newStaticIcons = staticIcons.slice();
+                        newStaticIcons[0].icon = event.target.value;
+                        this.setState(state => ({
+                          ...state,
+                          staticIcons: newStaticIcons
+                        }));
+                      }}
+                      defaultValue={0}
+                    >
+                      <option value={0}>Tripple Bar</option>
+                      <option value={141}>BAR</option>
+                      <option value={282}>Double Bar</option>
+                      <option value={423}>Seven</option>
+                      <option value={564}>Cherry</option>
+                    </Input>
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Row>
+                <Col sm="4">
+                  <FormGroup>
+                    <Label for="reelTwo"><b>ReelTwo</b></Label>
+                    <Input
+                      type="select"
+                      onChange={event => {
+                        let newStaticIcons = staticIcons.slice();
+                        newStaticIcons[1].position = event.target.value;
+                        this.setState(state => ({
+                          ...state,
+                          staticIcons: newStaticIcons
+                        }));
+                      }}
+                      defaultValue={0}
+                    >
+                      <option value={0}>Top</option>
+                      <option value={141}>Center</option>
+                      <option value={282}>Bottom</option>
+                    </Input>
+                    <Input
+                      type="select"
+                      onChange={event => {
+                        let newStaticIcons = staticIcons.slice();
+                        newStaticIcons[1].icon = event.target.value;
+                        this.setState(state => ({
+                          ...state,
+                          staticIcons: newStaticIcons
+                        }));
+                      }}
+                      defaultValue={0}
+                    >
+                      <option value={0}>Tripple Bar</option>
+                      <option value={141}>BAR</option>
+                      <option value={282}>Double Bar</option>
+                      <option value={423}>Seven</option>
+                      <option value={564}>Cherry</option>
+                    </Input>
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Row>
+                <Col sm="4">
+                  <FormGroup>
+                    <Label for="reelThree"><b>Reel Three</b></Label>
+
+                    <Input
+                      type="select"
+                      onChange={event => {
+                        let newStaticIcons = staticIcons.slice();
+                        newStaticIcons[2].position = event.target.value;
+                        this.setState(state => ({
+                          ...state,
+                          staticIcons: newStaticIcons
+                        }));
+                      }}
+                      defaultValue={0}
+                    >
+                      <option value={0}>Top</option>
+                      <option value={141}>Center</option>
+                      <option value={282}>Bottom</option>
+                    </Input>
+                    <Input
+                      type="select"
+                      onChange={event => {
+                        let newStaticIcons = staticIcons.slice();
+                        newStaticIcons[2].icon = event.target.value;
+                        this.setState(state => ({
+                          ...state,
+                          staticIcons: newStaticIcons
+                        }));
+                      }}
+                      defaultValue={0}
+                    >
+                      <option value={0}>Tripple Bar</option>
+                      <option value={141}>BAR</option>
+                      <option value={282}>Double Bar</option>
+                      <option value={423}>Seven</option>
+                      <option value={564}>Cherry</option>
+                    </Input>
+                  </FormGroup>
+                </Col>
+              </Row>
+            </Container>
           ) : (
-            <div></div>
-          )}
+              <div></div>
+            )}
         </div>
       </div>
     );
