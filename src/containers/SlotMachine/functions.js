@@ -53,6 +53,7 @@ export function checkResult(reels) {
       reels[2][0] === reels[1][0] &&
       reels[0][0] === "cherry"
     ) {
+      console.log(reels[0][0]);
       return {
         msg: "3 CHERRY symbols on top line, won 2000",
         value: 2000,

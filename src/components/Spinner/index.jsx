@@ -67,13 +67,13 @@ class Spinner extends React.Component {
    */
   getSymbolFromPosition() {
     const totalSymbols = 5;
-    const maxPosition = Spinner.iconHeight * (totalSymbols - 1) * -1;
+    const maxPosition = this.state.iconHeight * (totalSymbols - 1) * -1;
     let moved = (this.props.timer / 100) * this.multiplier;
     let startPosition = this.start;
     let currentPosition = startPosition;
 
     for (let i = 0; i < moved; i++) {
-      currentPosition -= Spinner.iconHeight;
+      currentPosition -= this.state.iconHeight;
 
       if (currentPosition < maxPosition) {
         currentPosition = 0;
